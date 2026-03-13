@@ -1,2 +1,3 @@
-aws_region   = "us-east-1"
-project_name = "terraform-gha-demo"
+aws_region    = "us-east-1"
+project_name  = "terraform-gha-demo"
+instance_type = "t2.micro"

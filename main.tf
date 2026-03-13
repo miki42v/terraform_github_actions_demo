@@ -1,3 +1,7 @@
+provider "aws" {
+  region = var.aws_region
+}
+
 resource "random_string" "suffix" {
   length  = 6
   upper   = false

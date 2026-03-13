@@ -40,14 +40,22 @@ jobs:
       - name: Debug AWS identity
         run: aws sts get-caller-identity
 
+      - name: Validate backend configuration
+        run: |
+          if [ -z "${{ vars.TF_STATE_BUCKET }}" ]; then
+            echo "Missing repository variable TF_STATE_BUCKET"
+            echo "Set it in: Settings -> Secrets and variables -> Actions -> Variables"
+            exit 1
+          fi
+
       - name: Terraform Init
         run: |
           terraform init \
             -backend-config="bucket=${{ vars.TF_STATE_BUCKET }}" \
             -backend-config="key=terraform.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION || env.AWS_REGION }}" \
-            -backend-config="dynamodb_table=${{ vars.TF_LOCK_TABLE }}" \
-            -backend-config="encrypt=true"
+            -backend-config="encrypt=true" \
+            -backend-config="use_lockfile=true"
 
       - name: Terraform Format Check
         run: terraform fmt -check
